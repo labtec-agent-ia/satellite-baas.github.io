@@ -1,0 +1,50 @@
+from flask import Flask, send_from_directory
+import os
+
+app = Flask(__name__)
+
+# Define paths to your repositories
+REPO_PATHS = {
+    'satellite-baas': '/path/to/satellite-baas.github.io',
+}
+
+@app.route('/')
+def index():
+    return """
+    <html>
+        <head><title>Repository Server</title></head>
+        <body>
+            <h1>Repository Content Server</h1>
+            <ul>
+                <li><a href="/satellite-baas">Satellite BaaS</a></li>
+            </ul>
+        </body>
+    </html>
+    """
+
+@app.route('/satellite-baas/<path:filename>')
+def serve_satellite_baas(filename):
+    return send_from_directory(REPO_PATHS['satellite-baas'], filename)
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8080)
+```
+
+This server:
+1. Serves the satellite-baas repository under `/satellite-baas/`
+2. Includes a simple index page with links to the repositories
+3. Uses Flask's `send_from_directory` for secure file serving
+4. Listens on port 8080
+
+To use this:
+1. Update the `REPO_PATHS` dictionary with correct paths
+2. Run with `python server.py`
+3. Access via `http://localhost:8080`
+
+For production use, add:
+- Authentication
+- SSL/TLS
+- Request logging
+- Error handling
+
+You can extend this pattern for multiple repositories by adding more routes.
